@@ -1538,7 +1538,7 @@ the chosen KDF.  The shared secret, <code>ss</code>, is provided as the <code>sa
 follows:<a href="#section-5.1-5" class="pilcrow">¶</a></p>
 <div class="lang-pseudocode sourcecode" id="section-5.1-6">
 <pre>
-function: shared = LabeledExtract(kem, kdf, prf, pk_bytes, enc)
+function: shared = LabeledExtract(kem, kdf, prf, ss, pk_bytes, enc)
 
 label = concat(
         ascii("PRSS-00"),
@@ -1707,13 +1707,13 @@ invocation by caching the expanded values.<a href="#section-6.1-8" class="pilcro
 <p id="section-7-1">The same PRF input <span class="bcp14">MUST NOT</span> be used more than once.  Using the same input more
 than once will produce identical outputs, which might be exploited by an
 attacker.<a href="#section-7-1" class="pilcrow">¶</a></p>
-<p id="section-7-2">This section describes two basic access modes that provide safeguards against
-accidental reuse of inputs:<a href="#section-7-2" class="pilcrow">¶</a></p>
+<p id="section-7-2">This section describes two basic access modes for randomness contexts that
+provide some safeguards against accidental reuse of inputs:<a href="#section-7-2" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-7-3.1">A sequential randomness context provides access using a counter; see
 <a href="#sequential" class="auto internal xref">Section 7.1</a>.<a href="#section-7-3.1" class="pilcrow">¶</a>
 </li>
-        <li class="normal" id="section-7-3.2">An indexed randomness context provides random access; see <a href="#indexed" class="auto internal xref">Section 7.2</a>.<a href="#section-7-3.2" class="pilcrow">¶</a>
+        <li class="normal" id="section-7-3.2">An indexed randomness context provides concurrent access; see <a href="#indexed" class="auto internal xref">Section 7.2</a>.<a href="#section-7-3.2" class="pilcrow">¶</a>
 </li>
       </ul>
 <p id="section-7-4">These usages are incompatible; only one mode of access can be used for a given
@@ -1752,13 +1752,13 @@ invocations of a certain randomness context.  Therefore, for a given record,
 <code>r</code>, and usage, <code>m</code>, the context is invoked as <code>context.PRF(r * M + m)</code>.  The
 simplest indexing scheme sets <code>M</code> to 1.<a href="#section-7.2-1" class="pilcrow">¶</a></p>
 <p id="section-7.2-2">Indexed usage is best suited to applications where individual records might be
-processed concurrently.  Using an index based on application context can ensure
-that the same PRF input is only used once and frees the context from using a
-tracker.<a href="#section-7.2-2" class="pilcrow">¶</a></p>
+processed concurrently.  Using indices based on identifiers from an application,
+such as record indices, can ensure that the same PRF input is only used once and
+frees the randomness context from needing its own counter.<a href="#section-7.2-2" class="pilcrow">¶</a></p>
 <p id="section-7.2-3">Binary sampling (<a href="#binary" class="auto internal xref">Section 8.2</a>) or oversampling (<a href="#oversampling" class="auto internal xref">Section 8.4</a>) are best suited
 for use with indexed modes.  Rejection sampling (<a href="#rejection" class="auto internal xref">Section 8.3</a>) is likely to be
-unsuitable for an indexed mode because it requires a variable number of PRF
-invocations to successfully complete.<a href="#section-7.2-3" class="pilcrow">¶</a></p>
+unsuitable for an indexed mode because it requires an unpredictable number of
+PRF invocations to successfully complete.<a href="#section-7.2-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -1794,7 +1794,7 @@ that has more values than the <code>Mo</code> parameter of the chosen PRF.<a hre
 <a href="#section-8.2" class="section-number selfRef">8.2. </a><a href="#name-binary-sampling" class="section-name selfRef">Binary Sampling</a>
         </h3>
 <p id="section-8.2-1">If the range of desired values is a whole power of 2, then simple bit operations
-can be used to obtain a value. For a maximum of <code>2&lt;sup&gt;n&lt;/sup&gt;</code> (exclusive),
+can be used to obtain a value. For a maximum of 2<sup>n</sup> (exclusive),
 bitwise operations can produce a value of <code>randomness &amp; ((1 &lt;&lt; n) - 1)</code>.<a href="#section-8.2-1" class="pilcrow">¶</a></p>
 <p id="section-8.2-2">Binary sampling produces uniformly random values with the only drawback being
 the constraint on its output range.<a href="#section-8.2-2" class="pilcrow">¶</a></p>
@@ -1810,16 +1810,16 @@ multiple values, depending on the value of <code>Mo</code> for the chosen PRF.<a
 <p id="section-8.3-1">Rejection sampling takes random values until the resulting value is in range.<a href="#section-8.3-1" class="pilcrow">¶</a></p>
 <p id="section-8.3-2">For values in the range 0 (inclusive) to <code>m</code> (exclusive), the value <code>m</code> is
 rounded up to the next power of 2; that is, an integer <code>n</code> is chosen such that
-<code>2&lt;sup&gt;n-1&lt;/sup&gt; &lt; m &lt; 2&lt;sup&gt;n&lt;/sup&gt;</code>.  Then, binary sampling (<a href="#binary" class="auto internal xref">Section 8.2</a>) is
+2<sup>n-1</sup> &lt; <code>m</code> &lt;= 2<sup>n</sup>.  Then, binary sampling (<a href="#binary" class="auto internal xref">Section 8.2</a>) is
 applied repeatedly for this larger range until the resulting value is less than
 <code>m</code>.<a href="#section-8.3-2" class="pilcrow">¶</a></p>
 <p id="section-8.3-3">Rejection sampling provides uniform randomness across the range from 0 to <code>m</code>
 without bias.  However, rejection sampling can require an indefinite number of
 PRF invocations to produce a result.  Rejection is more likely - and so the PRF
-invocation requirements are higher - when <code>m</code> is closer to <code>2&lt;sup&gt;n-1&lt;/sup&gt;</code>
-than <code>2&lt;sup&gt;n&lt;/sup&gt;</code>.  This can make rejection sampling unsuitable for use with
-indexed randomness (<a href="#indexed" class="auto internal xref">Section 7.2</a>), though it might be used a finite number of
-times before falling back to oversampling, which might reduce the effect of
+invocation requirements are higher - when <code>m</code> is closer to 2<sup>n-1</sup> than
+2<sup>n</sup>.  This can make rejection sampling unsuitable for use with indexed
+randomness (<a href="#indexed" class="auto internal xref">Section 7.2</a>), though it might be used a finite number of times
+before falling back to oversampling, which might reduce the effect of
 oversampling bias.<a href="#section-8.3-3" class="pilcrow">¶</a></p>
 </section>
 </div>
@@ -1832,9 +1832,9 @@ oversampling bias.<a href="#section-8.3-3" class="pilcrow">¶</a></p>
 PRF, reducing the PRF output modulo the maximum in the range can produce outputs
 with negligible bias.<a href="#section-8.4-1" class="pilcrow">¶</a></p>
 <p id="section-8.4-2">For example, an application goal might seek to produce values in the prime field
-<code>p = 2&lt;sup&gt;61&lt;/sup&gt; - 1</code>.  Using the AES PRF, where <code>Mo</code> is <code>2&lt;sup&gt;128&lt;/sup&gt;</code>
+<code>p</code> = 2<sup>61</sup> - 1.  Using the AES PRF, where <code>Mo</code> is 2<sup>128</sup>
 and reducing its output modulo <code>p</code> results in a bias that causes the first 64
-values of the field to be chosen with a probability of about <code>2&lt;sup&gt;-67&lt;/sup&gt;</code>
+values of the field to be chosen with a probability of about 2<sup>-67</sup>
 more than the remaining values. This degree of bias might be acceptable in some
 applications.<a href="#section-8.4-2" class="pilcrow">¶</a></p>
 <p id="section-8.4-3">To avoid excessive bias, applications <span class="bcp14">SHOULD NOT</span> use oversampling where the

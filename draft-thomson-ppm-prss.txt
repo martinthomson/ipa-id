@@ -300,7 +300,7 @@ Table of Contents
    function of the chosen KDF.  The shared secret, ss, is provided as
    the salt input, as follows:
 
-   function: shared = LabeledExtract(kem, kdf, prf, pk_bytes, enc)
+   function: shared = LabeledExtract(kem, kdf, prf, ss, pk_bytes, enc)
 
    label = concat(
            ascii("PRSS-00"),
@@ -426,13 +426,13 @@ Table of Contents
    input more than once will produce identical outputs, which might be
    exploited by an attacker.
 
-   This section describes two basic access modes that provide safeguards
-   against accidental reuse of inputs:
+   This section describes two basic access modes for randomness contexts
+   that provide some safeguards against accidental reuse of inputs:
 
    *  A sequential randomness context provides access using a counter;
       see Section 7.1.
 
-   *  An indexed randomness context provides random access; see
+   *  An indexed randomness context provides concurrent access; see
       Section 7.2.
 
    These usages are incompatible; only one mode of access can be used
@@ -466,14 +466,15 @@ Table of Contents
    M to 1.
 
    Indexed usage is best suited to applications where individual records
-   might be processed concurrently.  Using an index based on application
-   context can ensure that the same PRF input is only used once and
-   frees the context from using a tracker.
+   might be processed concurrently.  Using indices based on identifiers
+   from an application, such as record indices, can ensure that the same
+   PRF input is only used once and frees the randomness context from
+   needing its own counter.
 
    Binary sampling (Section 8.2) or oversampling (Section 8.4) are best
    suited for use with indexed modes.  Rejection sampling (Section 8.3)
-   is likely to be unsuitable for an indexed mode because it requires a
-   variable number of PRF invocations to successfully complete.
+   is likely to be unsuitable for an indexed mode because it requires an
+   unpredictable number of PRF invocations to successfully complete.
 
 8.  Sampling from the PRF Output
 
@@ -500,9 +501,9 @@ Table of Contents
 8.2.  Binary Sampling
 
    If the range of desired values is a whole power of 2, then simple bit
-   operations can be used to obtain a value.  For a maximum of
-   2<sup>n</sup> (exclusive), bitwise operations can produce a value of
-   randomness & ((1 << n) - 1).
+   operations can be used to obtain a value.  For a maximum of 2^n
+   (exclusive), bitwise operations can produce a value of randomness &
+   ((1 << n) - 1).
 
    Binary sampling produces uniformly random values with the only
    drawback being the constraint on its output range.
@@ -518,19 +519,18 @@ Table of Contents
 
    For values in the range 0 (inclusive) to m (exclusive), the value m
    is rounded up to the next power of 2; that is, an integer n is chosen
-   such that 2<sup>n-1</sup> < m < 2<sup>n</sup>.  Then, binary sampling
-   (Section 8.2) is applied repeatedly for this larger range until the
-   resulting value is less than m.
+   such that 2^(n-1) < m <= 2^n.  Then, binary sampling (Section 8.2) is
+   applied repeatedly for this larger range until the resulting value is
+   less than m.
 
    Rejection sampling provides uniform randomness across the range from
    0 to m without bias.  However, rejection sampling can require an
    indefinite number of PRF invocations to produce a result.  Rejection
    is more likely - and so the PRF invocation requirements are higher -
-   when m is closer to 2<sup>n-1</sup> than 2<sup>n</sup>.  This can
-   make rejection sampling unsuitable for use with indexed randomness
-   (Section 7.2), though it might be used a finite number of times
-   before falling back to oversampling, which might reduce the effect of
-   oversampling bias.
+   when m is closer to 2^(n-1) than 2^n.  This can make rejection
+   sampling unsuitable for use with indexed randomness (Section 7.2),
+   though it might be used a finite number of times before falling back
+   to oversampling, which might reduce the effect of oversampling bias.
 
 8.4.  Oversampling
 
@@ -539,11 +539,11 @@ Table of Contents
    the range can produce outputs with negligible bias.
 
    For example, an application goal might seek to produce values in the
-   prime field p = 2<sup>61</sup> - 1.  Using the AES PRF, where Mo is
-   2<sup>128</sup> and reducing its output modulo p results in a bias
-   that causes the first 64 values of the field to be chosen with a
-   probability of about 2<sup>-67</sup> more than the remaining values.
-   This degree of bias might be acceptable in some applications.
+   prime field p = 2^61 - 1.  Using the AES PRF, where Mo is 2^128 and
+   reducing its output modulo p results in a bias that causes the first
+   64 values of the field to be chosen with a probability of about 2^-67
+   more than the remaining values.  This degree of bias might be
+   acceptable in some applications.
 
    To avoid excessive bias, applications SHOULD NOT use oversampling
    where the output is less than 2^48 times smaller than Mo.
