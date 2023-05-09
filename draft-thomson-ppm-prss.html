@@ -1055,7 +1055,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Thomson</td>
-<td class="center">Expires 9 November 2023</td>
+<td class="center">Expires 10 November 2023</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1068,12 +1068,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-thomson-ppm-prss-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2023-05-08" class="published">8 May 2023</time>
+<time datetime="2023-05-09" class="published">9 May 2023</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2023-11-09">9 November 2023</time></dd>
+<dd class="expires"><time datetime="2023-11-10">10 November 2023</time></dd>
 <dt class="label-authors">Author:</dt>
 <dd class="authors">
 <div class="author">
@@ -1126,7 +1126,7 @@ multi-party computation (MPC).<a href="#section-abstract-1" class="pilcrow">¶</
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 9 November 2023.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 10 November 2023.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1187,7 +1187,7 @@ multi-party computation (MPC).<a href="#section-abstract-1" class="pilcrow">¶</
             <p id="section-toc.1-1.6.1"><a href="#section-6" class="auto internal xref">6</a>.  <a href="#name-pseudorandom-function" class="internal xref">Pseudorandom Function</a></p>
 <ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6.2.1">
-                <p id="section-toc.1-1.6.2.1.1"><a href="#section-6.1" class="auto internal xref">6.1</a>.  <a href="#name-fixed-key-aes-prf" class="internal xref">Fixed-Key AES PRF</a></p>
+                <p id="section-toc.1-1.6.2.1.1"><a href="#section-6.1" class="auto internal xref">6.1</a>.  <a href="#name-cached-key-aes-prf" class="internal xref">Cached-Key AES PRF</a></p>
 </li>
             </ul>
 </li>
@@ -1221,6 +1221,14 @@ multi-party computation (MPC).<a href="#section-abstract-1" class="pilcrow">¶</
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9">
             <p id="section-toc.1-1.9.1"><a href="#section-9" class="auto internal xref">9</a>.  <a href="#name-security-considerations" class="internal xref">Security Considerations</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9.2.1">
+                <p id="section-toc.1-1.9.2.1.1"><a href="#section-9.1" class="auto internal xref">9.1</a>.  <a href="#name-usage-limit-analysis" class="internal xref">Usage Limit Analysis</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9.2.2">
+                <p id="section-toc.1-1.9.2.2.1"><a href="#section-9.2" class="auto internal xref">9.2</a>.  <a href="#name-formal-analysis" class="internal xref">Formal Analysis</a></p>
+</li>
+            </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10">
             <p id="section-toc.1-1.10.1"><a href="#section-10" class="auto internal xref">10</a>. <a href="#name-iana-considerations" class="internal xref">IANA Considerations</a></p>
@@ -1591,13 +1599,15 @@ which KEM, KDF, and PRF are used.<a href="#section-5.2-4" class="pilcrow">¶</a>
       </h2>
 <p id="section-6-1">A PRF is instantiated with a secret key, <code>k</code>, and provides a single function
 <code>PRF(i)</code>.<a href="#section-6-1" class="pilcrow">¶</a></p>
-<p id="section-6-2">This document adapts the PRF interface to take a non-negative integer
-as input and to produce a non-negative integer as output.  Each PRF definition
-<span class="bcp14">MUST</span> define the maximum value of both input (<code>Mi</code>) and output (<code>Mo</code>) values.<a href="#section-6-2" class="pilcrow">¶</a></p>
+<p id="section-6-2">This document adapts the PRF interface to take a non-negative integer as input
+and to produce a non-negative integer as output.  New PRF definitions <span class="bcp14">MUST</span>
+define the maximum value of both input (<code>Mi</code>) and output (<code>Mo</code>) values.<a href="#section-6-2" class="pilcrow">¶</a></p>
 <p id="section-6-3">Importantly, the maximum input value <span class="bcp14">SHOULD</span> reflect a limit that is based on
-maintaining security when all input values between 0 (inclusive) and that
-maximum (exclusive) are provided.  This limit might be less than the constraints
-that might be implied by the underlying function.<a href="#section-6-3" class="pilcrow">¶</a></p>
+keeping attacker advantage negligible relative to an ideal PRF.  Any advantage
+needs to be bounded when an attacker is able to obtain output values for all
+input values between 0 (inclusive) and that maximum (exclusive).  The maximum
+input (<code>Mi</code>) is therefore likely to be less than the underlying function might
+otherwise permit.<a href="#section-6-3" class="pilcrow">¶</a></p>
 <p id="section-6-4">This assumes the usage modes from <a href="#modes" class="auto internal xref">Section 7</a>; alternative usage modes that pass
 inputs that are randomized or sparse across the entire input space of the
 underlying function are possible, but these have not been specified.<a href="#section-6-4" class="pilcrow">¶</a></p>
@@ -1605,13 +1615,13 @@ underlying function are possible, but these have not been specified.<a href="#se
 <a href="#iana" class="auto internal xref">Section 10</a>.<a href="#section-6-5" class="pilcrow">¶</a></p>
 <div id="aes">
 <section id="section-6.1">
-        <h3 id="name-fixed-key-aes-prf">
-<a href="#section-6.1" class="section-number selfRef">6.1. </a><a href="#name-fixed-key-aes-prf" class="section-name selfRef">Fixed-Key AES PRF</a>
+        <h3 id="name-cached-key-aes-prf">
+<a href="#section-6.1" class="section-number selfRef">6.1. </a><a href="#name-cached-key-aes-prf" class="section-name selfRef">Cached-Key AES PRF</a>
         </h3>
 <p id="section-6.1-1">This document defines a PRF based on that described in
-<span>[<a href="#GKWWY20" class="cite xref">GKWWY20</a>]</span>.  This provides a PRF that has
+<span>[<a href="#GKWY20" class="cite xref">GKWY20</a>]</span>.  This provides a PRF that has
 circular correlation robustness.<a href="#section-6.1-1" class="pilcrow">¶</a></p>
-<p id="section-6.1-2">This uses the AES function, either AES-128 or AES-256, as defined in
+<p id="section-6.1-2">This PRF uses the AES function, either AES-128 or AES-256, as defined in
 <span>[<a href="#AES" class="cite xref">AES</a>]</span>.  Both of these functions accept a 16 byte
 input.  The primary difference in these functions is the size of the key;
 AES-128 uses a 16 byte key, whereas AES-256 uses a 32 byte key.  This
@@ -1658,18 +1668,12 @@ information is summarized in <a href="#_table-prf" class="auto internal xref">Ta
 <li id="section-6.1-5.1">The input, <code>i</code>, is converted to a 16-byte input using a little-endian
 encoding.<a href="#section-6.1-5.1" class="pilcrow">¶</a>
 </li>
-          <li id="section-6.1-5.2">These bytes are then split into two chunks of 8 bytes each, the first 8 bytes
-containing the least significant 64 bits of the original value; the second 8
-bytes containing the most significant 64 bits.<a href="#section-6.1-5.2" class="pilcrow">¶</a>
+          <li id="section-6.1-5.2">These bytes are then input to the AES function to produce a 16 byte output.<a href="#section-6.1-5.2" class="pilcrow">¶</a>
 </li>
-          <li id="section-6.1-5.3">A 16-byte sequence is formed from the most significant 8 bytes, followed by
-the XORed values of both chunks.<a href="#section-6.1-5.3" class="pilcrow">¶</a>
+          <li id="section-6.1-5.3">The AES input and output are XORed produce a 16 byte sequence.<a href="#section-6.1-5.3" class="pilcrow">¶</a>
 </li>
-          <li id="section-6.1-5.4">These bytes are then input to the AES function to produce a 16 byte output.<a href="#section-6.1-5.4" class="pilcrow">¶</a>
-</li>
-          <li id="section-6.1-5.5">The AES input and output are XORed produce a 16 byte sequence, which is
-interpreted as an integer using little-endian encoding to produce the final
-randomness.<a href="#section-6.1-5.5" class="pilcrow">¶</a>
+          <li id="section-6.1-5.4">The byte sequence is interpreted as an integer using little-endian encoding
+to produce the output randomness.<a href="#section-6.1-5.4" class="pilcrow">¶</a>
 </li>
         </ol>
 <p id="section-6.1-6">The process in pseudocode is:<a href="#section-6.1-6" class="pilcrow">¶</a></p>
@@ -1677,21 +1681,24 @@ randomness.<a href="#section-6.1-5.5" class="pilcrow">¶</a>
 <pre>
 function: randomness = Context.PRF(i)
 
-i_bytes = rev(I2OSP(i, 16))
-lo, hi = i_bytes[0..8], i_bytes[8..16]
-input = concat(hi, xor(lo, hi))
+input = rev(I2OSP(i, 16))
 output = aes(k, input)
-randomness = OS2IP(rev(xor(output, input)))
+r_bytes = xor(output, input)
+randomness = OS2IP(rev(r_bytes))
 </pre><a href="#section-6.1-7" class="pilcrow">¶</a>
 </div>
 <p id="section-6.1-8">This step is performance-sensitive, so little endian encoding is chosen to match
-the endianness of most hardware that is in use.  This PRF uses a fixed key,
+the endianness of most hardware that is in use.  This PRF uses a constant key,
 which allows implementations to avoid computing the key expansion on each PRF
 invocation by caching the expanded values.<a href="#section-6.1-8" class="pilcrow">¶</a></p>
 <span class="break"></span><dl class="dlParallel" id="section-6.1-9">
           <dt id="section-6.1-9.1">Note:</dt>
           <dd style="margin-left: 1.5em" id="section-6.1-9.2">
-            <p id="section-6.1-9.2.1">The same PRF core is defined in <span><a href="https://datatracker.ietf.org/doc/html/draft-irtf-cfrg-vdaf-05#section-6.2.2" class="relref">Section 6.2.2</a> of [<a href="#VDAF" class="cite xref">VDAF</a>]</span>.<a href="#section-6.1-9.2.1" class="pilcrow">¶</a></p>
+            <p id="section-6.1-9.2.1">A similar PRF core is described in <span><a href="https://datatracker.ietf.org/doc/html/draft-irtf-cfrg-vdaf-05#section-6.2.2" class="relref">Section 6.2.2</a> of [<a href="#VDAF" class="cite xref">VDAF</a>]</span>, based on the analysis in
+<span>[<a href="#GKWWY20" class="cite xref">GKWWY20</a>]</span>.  This version operates from a
+limited input domain that always results in the high bits being zero in all
+cases, making the difference between the two approaches negligible; these
+approaches consequently only differ in the position of the input bits.<a href="#section-6.1-9.2.1" class="pilcrow">¶</a></p>
 </dd>
         <dd class="break"></dd>
 </dl>
@@ -1815,12 +1822,13 @@ applied repeatedly for this larger range until the resulting value is less than
 <code>m</code>.<a href="#section-8.3-2" class="pilcrow">¶</a></p>
 <p id="section-8.3-3">Rejection sampling provides uniform randomness across the range from 0 to <code>m</code>
 without bias.  However, rejection sampling can require an indefinite number of
-PRF invocations to produce a result.  Rejection is more likely - and so the PRF
-invocation requirements are higher - when <code>m</code> is closer to 2<sup>n-1</sup> than
-2<sup>n</sup>.  This can make rejection sampling unsuitable for use with indexed
-randomness (<a href="#indexed" class="auto internal xref">Section 7.2</a>), though it might be used a finite number of times
-before falling back to oversampling, which might reduce the effect of
-oversampling bias.<a href="#section-8.3-3" class="pilcrow">¶</a></p>
+PRF invocations to produce a result.  Rejection is more likely -- and so the
+expected number of PRF invocations increases -- when <code>m</code> is closer to
+2<sup>n-1</sup> than 2<sup>n</sup>.  This can make rejection sampling unsuitable
+for use with indexed randomness (<a href="#indexed" class="auto internal xref">Section 7.2</a>).  Rejection sampling might be used
+a limited number of times before falling back to oversampling
+(<a href="#oversampling" class="auto internal xref">Section 8.4</a>), which can reduce oversampling bias while capping the number
+of PRF invocations.<a href="#section-8.3-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="oversampling">
@@ -1848,13 +1856,44 @@ output is less than 2<sup>48</sup> times smaller than <code>Mo</code>.<a href="#
       <h2 id="name-security-considerations">
 <a href="#section-9" class="section-number selfRef">9. </a><a href="#name-security-considerations" class="section-name selfRef">Security Considerations</a>
       </h2>
-<p id="section-9-1">TODO<a href="#section-9-1" class="pilcrow">¶</a></p>
+<div id="usage-limit-analysis">
+<section id="section-9.1">
+        <h3 id="name-usage-limit-analysis">
+<a href="#section-9.1" class="section-number selfRef">9.1. </a><a href="#name-usage-limit-analysis" class="section-name selfRef">Usage Limit Analysis</a>
+        </h3>
+<p id="section-9.1-1">The usage limits in <a href="#aes" class="auto internal xref">Section 6.1</a> ensure that attacker advantage remains small.
+Theorem 4 of <span>[<a href="#GKWY20" class="cite xref">GKWY20</a>]</span> shows that advantage comprises two components:<a href="#section-9.1-1" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-9-2.1">analysis<a href="#section-9-2.1" class="pilcrow">¶</a>
+<li class="normal" id="section-9.1-2.1">a computational limit of <code>q^2/2.2^k</code> that is based solely on attacker work
+(<code>q</code>) and the key size (<code>k</code>) of the permutation<a href="#section-9.1-2.1" class="pilcrow">¶</a>
 </li>
-        <li class="normal" id="section-9-2.2">usage limits that aren't just birthday bounds<a href="#section-9-2.2" class="pilcrow">¶</a>
+          <li class="normal" id="section-9.1-2.2">a usage limit of <code>2pq/2^b</code> that provides advantage proportional to the number
+of uses of the PRF (<code>p</code>), with the entropy of the pseudorandom function (<code>b</code>)
+acting to counteract attacker advantage<a href="#section-9.1-2.2" class="pilcrow">¶</a>
 </li>
-      </ul>
+        </ul>
+<p id="section-9.1-3">This analysis will focus on the second component, as the first component is
+unaffected by usage of the PRF.<a href="#section-9.1-3" class="pilcrow">¶</a></p>
+<p id="section-9.1-4">The first component applies to an idealized PRF.  This provides statistical
+security of 2<sup>-64</sup> for AES-128 based on the birthday bound.<a href="#section-9.1-4" class="pilcrow">¶</a></p>
+<p id="section-9.1-5">Consequently, there is no significant benefit to limiting the second component
+to be significantly smaller than 2<sup>-64</sup>.  This analysis assumes the
+same limit for AES-256 for simplicity.  AES uses the same block size for all
+variants, so the entropy (<code>b</code>) is the same at 128 bits.<a href="#section-9.1-5" class="pilcrow">¶</a></p>
+<p id="section-9.1-6">For an overall advantage of 2<sup>-63</sup>, the usage component is limited to
+2<sup>-64</sup>, leading to a limit of 2<sup>64</sup> uses of the PRF, as shown
+in <a href="#_table-prf" class="auto internal xref">Table 1</a>.<a href="#section-9.1-6" class="pilcrow">¶</a></p>
+<p id="section-9.1-7">This assumes that AES is modeled as an ideal pseudorandom permutation.<a href="#section-9.1-7" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="formal-analysis">
+<section id="section-9.2">
+        <h3 id="name-formal-analysis">
+<a href="#section-9.2" class="section-number selfRef">9.2. </a><a href="#name-formal-analysis" class="section-name selfRef">Formal Analysis</a>
+        </h3>
+<p id="section-9.2-1">TODO<a href="#section-9.2-1" class="pilcrow">¶</a></p>
+</section>
+</div>
 </section>
 </div>
 <div id="iana">
@@ -1983,6 +2022,10 @@ given a "permanent" status and entries reference <a href="#prf" class="auto inte
 <dt id="GKWWY20">[GKWWY20]</dt>
         <dd>
 <span class="refAuthor">Guo, C.</span>, <span class="refAuthor">Katz, J.</span>, <span class="refAuthor">Wang, X.</span>, <span class="refAuthor">Weng, C.</span>, and <span class="refAuthor">Y. Yu</span>, <span class="refTitle">"Better Concrete Security for Half-Gates Garbling (in the Multi-instance Setting)"</span>, <span class="seriesInfo">Advances in Cryptology - CRYPTO 2020 pp. 793-822</span>, <span class="seriesInfo">DOI 10.1007/978-3-030-56880-1_28</span>, <time datetime="2020" class="refDate">2020</time>, <span>&lt;<a href="https://doi.org/10.1007/978-3-030-56880-1_28">https://doi.org/10.1007/978-3-030-56880-1_28</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="GKWY20">[GKWY20]</dt>
+        <dd>
+<span class="refAuthor">Guo, C.</span>, <span class="refAuthor">Katz, J.</span>, <span class="refAuthor">Wang, X.</span>, and <span class="refAuthor">Y. Yu</span>, <span class="refTitle">"Efficient and Secure Multiparty Computation from Fixed-Key Block Ciphers"</span>, <span class="seriesInfo">2020 IEEE Symposium on Security and Privacy (SP)</span>, <span class="seriesInfo">DOI 10.1109/sp40000.2020.00016</span>, <time datetime="2020-05" class="refDate">May 2020</time>, <span>&lt;<a href="https://doi.org/10.1109/sp40000.2020.00016">https://doi.org/10.1109/sp40000.2020.00016</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="MLS">[MLS]</dt>
         <dd>
