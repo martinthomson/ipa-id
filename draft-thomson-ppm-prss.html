@@ -665,7 +665,8 @@ sub, sup {
 .references dt {
   text-align: right;
   font-weight: bold;
-  min-width: 7em;
+  min-width: 10ch;
+  margin-right: 1.5ch;
 }
 .references dt:target::before {
   content: "⇒";
@@ -673,7 +674,7 @@ sub, sup {
   margin: 0 10px 0 -25px;
 }
 .references dd {
-  margin-left: 8em !important;
+  margin-left: 12ch !important;
   overflow: auto;
 }
 
@@ -1864,7 +1865,7 @@ output is less than 2<sup>48</sup> times smaller than <code>Mo</code>.<a href="#
 <p id="section-9.1-1">The usage limits in <a href="#aes" class="auto internal xref">Section 6.1</a> ensure that attacker advantage remains small.
 Theorem 4 of <span>[<a href="#GKWY20" class="cite xref">GKWY20</a>]</span> shows that advantage comprises two components:<a href="#section-9.1-1" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-9.1-2.1">a computational limit of <code>q^2/2.2^k</code> that is based solely on attacker work
+<li class="normal" id="section-9.1-2.1">a computational limit of <code>q^2/(2*2^k)</code> that is based solely on attacker work
 (<code>q</code>) and the key size (<code>k</code>) of the permutation<a href="#section-9.1-2.1" class="pilcrow">¶</a>
 </li>
           <li class="normal" id="section-9.1-2.2">a usage limit of <code>2pq/2^b</code> that provides advantage proportional to the number
@@ -1908,7 +1909,7 @@ registrations or the "Specification Required" policy for permanent registrations
 when the requests are invalid, abusive, or duplicative of existing entries.<a href="#section-10-1" class="pilcrow">¶</a></p>
 <p id="section-10-2">New entries for the "PRF Functions" registry <span class="bcp14">MUST</span> include the following
 information:<a href="#section-10-2" class="pilcrow">¶</a></p>
-<span class="break"></span><dl class="dlParallel" id="section-10-3">
+<span class="break"></span><dl class="dlCompact dlParallel" id="section-10-3">
         <dt id="section-10-3.1">Name:</dt>
         <dd style="margin-left: 1.5em" id="section-10-3.2">
           <p id="section-10-3.2.1">A short mnemonic for the PRF.<a href="#section-10-3.2.1" class="pilcrow">¶</a></p>
@@ -1941,8 +1942,8 @@ information:<a href="#section-10-2" class="pilcrow">¶</a></p>
         <dd class="break"></dd>
 <dt id="section-10-3.13">Specification:</dt>
         <dd style="margin-left: 1.5em" id="section-10-3.14">
-          <p id="section-10-3.14.1">A reference to a specification for the PRF.  This field is optional for
-provisional registrations.<a href="#section-10-3.14.1" class="pilcrow">¶</a></p>
+          <p id="section-10-3.14.1">A reference to a specification for the PRF.  Citing a specification is
+optional for provisional registrations.<a href="#section-10-3.14.1" class="pilcrow">¶</a></p>
 </dd>
         <dd class="break"></dd>
 <dt id="section-10-3.15">Last Updated:</dt>
