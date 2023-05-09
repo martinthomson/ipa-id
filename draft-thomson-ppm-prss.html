@@ -1791,9 +1791,12 @@ Similarly, each KDF is limited in the amount of entropy it only able to retain.
 Finally, each PRF also has limits that might further reduce the maximum entropy
 available.<a href="#section-8.1-1" class="pilcrow">¶</a></p>
 <p id="section-8.1-2">Selecting values from a range that is larger than the available entropy will
-reduce effectiveness.  The result being that the selection is not uniformly
-random.  In particular, these methods <span class="bcp14">MUST NOT</span> be used to select from a range
-that has more values than the <code>Mo</code> parameter of the chosen PRF.<a href="#section-8.1-2" class="pilcrow">¶</a></p>
+affect the uniformity of the output.  In particular, these methods <span class="bcp14">MUST NOT</span> be
+used to select from a range that has more values than the <code>Mo</code> parameter of the
+chosen PRF.<a href="#section-8.1-2" class="pilcrow">¶</a></p>
+<p id="section-8.1-3">If values larger than <code>Mo</code> are needed, the output of multiple PRF invocations
+can be combined.  With <code>k</code> invocations, the effective value of <code>Mo</code> increases to
+<code>Mo</code><sup><code>k</code></sup>.<a href="#section-8.1-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="binary">
@@ -1841,13 +1844,13 @@ of PRF invocations.<a href="#section-8.3-3" class="pilcrow">¶</a></p>
 PRF, reducing the PRF output modulo the maximum in the range can produce outputs
 with negligible bias.<a href="#section-8.4-1" class="pilcrow">¶</a></p>
 <p id="section-8.4-2">For example, an application goal might seek to produce values in the prime field
-<code>p</code> = 2<sup>61</sup> - 1.  Using the AES PRF, where <code>Mo</code> is 2<sup>128</sup>
-and reducing its output modulo <code>p</code> results in a bias that causes the first 64
-values of the field to be chosen with a probability of about 2<sup>-67</sup>
-more than the remaining values. This degree of bias might be acceptable in some
-applications.<a href="#section-8.4-2" class="pilcrow">¶</a></p>
+<code>p</code> = 2<sup>61</sup> - 1.  Using the AES PRF, where <code>Mo</code> is 2<sup>128</sup>, and
+reducing its output modulo <code>p</code> results in a bias that causes the first 64 values
+of the field to be chosen with a probability of about 2<sup>-67</sup> more than
+other values. This degree of bias might be acceptable in some applications.<a href="#section-8.4-2" class="pilcrow">¶</a></p>
 <p id="section-8.4-3">To avoid excessive bias, applications <span class="bcp14">SHOULD NOT</span> use oversampling where the
-output is less than 2<sup>48</sup> times smaller than <code>Mo</code>.<a href="#section-8.4-3" class="pilcrow">¶</a></p>
+output is less than 2<sup>48</sup> times smaller than <code>Mo</code>.  The output of
+multiple PRF invocations could be combined to reduce bias.<a href="#section-8.4-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -1857,6 +1860,10 @@ output is less than 2<sup>48</sup> times smaller than <code>Mo</code>.<a href="#
       <h2 id="name-security-considerations">
 <a href="#section-9" class="section-number selfRef">9. </a><a href="#name-security-considerations" class="section-name selfRef">Security Considerations</a>
       </h2>
+<p id="section-9-1">This document describes a small component of a larger system.  A discussion of
+considerations necessary to ensure correct application of the included
+techniques is provided in relevant sections.  This section concentrates on a
+more general analysis of these mechanisms.<a href="#section-9-1" class="pilcrow">¶</a></p>
 <div id="usage-limit-analysis">
 <section id="section-9.1">
         <h3 id="name-usage-limit-analysis">
