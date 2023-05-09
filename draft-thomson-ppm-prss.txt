@@ -414,11 +414,11 @@ Table of Contents
    expanded values.
 
    Note:  A similar PRF core is described in Section 6.2.2 of [VDAF],
-      based on the analysis in [GKWWY20].  This version operates from a
-      limited input domain that always results in the high bits being
-      zero in all cases, making the difference between the two
-      approaches negligible; these approaches consequently only differ
-      in the position of the input bits.
+      based on the analysis in [GKWWY20].  The function described in
+      this document operates from a limited input domain that always
+      results in the high bits being zero in all cases, making the
+      difference between the two approaches negligible; these approaches
+      consequently only differ in the placement of the input bits.
 
 7.  Randomness Usage Modes
 
