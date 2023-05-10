@@ -4,8 +4,8 @@
 
 Privacy Preserving Measurement                                M. Thomson
 Internet-Draft                                                   Mozilla
-Intended status: Standards Track                              9 May 2023
-Expires: 10 November 2023
+Intended status: Standards Track                             10 May 2023
+Expires: 11 November 2023
 
 
           High Performance Pseudorandom Secret Sharing (PRSS)
@@ -50,7 +50,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 10 November 2023.
+   This Internet-Draft will expire on 11 November 2023.
 
 Copyright Notice
 
@@ -314,7 +314,7 @@ Table of Contents
            I2OSP(kem.Nenc, 2),
            enc,
          )
-   shared = Extract(salt = ss, ikm = label)
+   shared = kdf.Extract(salt = ss, ikm = label)
 
    This process extracts shared entropy that is bound to this protocol
    and the context in which it was created.
